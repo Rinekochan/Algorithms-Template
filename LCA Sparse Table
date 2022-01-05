@@ -1,9 +1,10 @@
+ll n, q, par[200005], T[200005][21], h[200005];
+vector <ll> adj[200005];
 void dfs(ll node, ll par){
     h[node] = h[par] + 1;
     T[node][0] = par;
-    dist[node] = dist[par] + node;
-    for (int i = 1; i < 17; i++){
-        T[node][1] = T[T[node][i - 1]][i - 1];
+    for (int i = 1; i < 21; i++){
+        T[node][i] = T[T[node][i - 1]][i - 1];
     }
     for (auto v : adj[node]){
         if (v == par) continue;
@@ -12,15 +13,15 @@ void dfs(ll node, ll par){
 }
 ll lca(int u, int v){
     if (h[u] < h[v]) swap(u, v);
-    for (int i = 16; i >= 0; i--){
+    for (int i = 20; i >= 0; i--){
         if (h[T[u][i]] >= h[v]) u = T[u][i];
     }
     if (u == v) return u;
-    for (int i = 16; i >= 0; i--){
+    for (int i = 20; i >= 0; i--){
         if (T[u][i] != T[v][i]){
             u = T[u][i];
             v = T[v][i];
         }
-        return T[u][0];
     }
+    return T[u][0];
 }
