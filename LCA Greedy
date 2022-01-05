@@ -1,0 +1,25 @@
+void dfs(ll node) {
+    for (auto u : adj[node])
+        if (u != par[node]) {
+            par[u] = node;
+            h[u] = h[node] + 1;
+            dfs(u);
+    }
+}
+ll solve(int u, int v, int x) {
+    int sum = 0;
+    while (h[u] > h[v]){
+        u = par[u];
+        if (u == x) return x;
+    }
+    while (h[v] > h[u]){
+        v = par[v];
+        if (v == x) return x;
+    }
+    while (u != v){
+        u = par[u];
+        v = par[v];
+        if (u == x || v == x) return x;
+    }
+    return u;
+}
