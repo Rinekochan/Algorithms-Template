@@ -1,4 +1,5 @@
 vector <ll> p;
+string s, t;
 void pre_cal(string s){
     ll sz = s.length();
     lpre[0] = 0;
