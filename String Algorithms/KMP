@@ -2,7 +2,7 @@ vector <ll> p;
 string s, t;
 void pre_cal(string s){
     ll sz = s.length();
-    lpre[0] = 0;
+    p[0] = 0;
     ll j = 0;
     for (int i = 1; i < sz; i++){
         while (j >= 0 && s[i] != s[j]){
