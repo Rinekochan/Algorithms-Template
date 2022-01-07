@@ -1,0 +1,21 @@
+string s;
+ll rotation(string s){
+    ll sz = s.length();
+    ll x = 0, y, u, v, i, j;
+    for (y = 1; y < sz; y++){
+        i = u = x;
+        j = v = y;
+        while (s[i] == s[j]){
+            u++; v++;
+            if (++i == sz) i = 0;
+            if (++j == sz) j = 0;
+            if (i == x) break;
+        }
+        if (s[i] <= s[j]) y = v;
+        else{
+            x = y;
+            if (u > y) y = u;
+        }
+    }
+    return x;
+}
