@@ -1,0 +1,21 @@
+string s = string a + "#" + string b;
+void Z_func(string s){
+    ll L = 0, R = 0;
+    ll sz = a.size();
+    Z[0] = sz;
+    for (int i = 1; i < sz; i++){
+        if (i > R){
+            L = R = i;
+            while (R < sz && a[R] == a[R - L]) R++;
+            Z[i] = R - L; R--;
+        }else{
+            if (Z[i - L] < R + i - 1) Z[i] = Z[i - L];
+            else{
+                L = i;
+                while (R < sz && a[R] == a[R - L]) R++;
+                Z[i] = R - L; R--;
+            }
+        }
+    }
+    return;
+}
