@@ -1,7 +1,7 @@
 string s = string a + "#" + string b;
 void Z_func(string s){
     ll L = 0, R = 0;
-    ll sz = a.size();
+    ll sz = s.size();
     Z[0] = sz;
     for (int i = 1; i < sz; i++){
         if (i > R){
