@@ -1,0 +1,129 @@
+#include<bits/stdc++.h>
+#include<ext/rope>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define faster  ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+#define el "\n"
+#define memset(a, x) memset(a, (x), sizeof(a));
+#define sz(x) x.size()
+#define pb push_back
+#define all(x) x.begin(), x.end()
+#define fi first
+#define se second
+#define mp make_pair
+#define pll pair<long long, long long>
+#define cont continue
+using namespace std;
+using namespace __gnu_pbds;
+using ll = long long;
+using ld = long double;
+using ull = unsigned long long;
+using str = string;
+const ll INF = 1e9;
+const ll MAXN = (1 << 20) + 55;
+const ll MOD = 1e9 + 7;
+template <class T> using index_set = tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update>;
+#define no cout << "no" << el;
+#define yes cout << "yes" << el;
+#define umap unordered_map
+#define BitON(i, mask) ((mask >> i) & 1)
+ll gcd(ll x, ll y){
+    return !y?x:gcd(y,x%y);
+}
+ll pow_mod(ll a, ll b, ll m) { ll res = 1; while(b){ res = res * (b & 1 ? a : 1) % m; a = a * a % m; b >>= 1; } return res; }
+void setIn(str s) { freopen(s.c_str(),"r",stdin); }
+void setOut(str s) { freopen(s.c_str(),"w",stdout); }
+void setIO(str s) {
+	setIn(s+".in"); setOut(s+".out");
+}
+
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+struct edge{
+    ll u, v, w;
+};
+struct point{
+    ll x, y;
+};
+bool cmp (const pair <ll, ll> a, const pair <ll, ll> b){
+    return (a.se < b.se || a.se == b.se && a.fi < b.fi);
+}
+vector<pair <ll, ll>> points;
+vector<pair <ll, ll>> hull;
+ll start = 0;
+bool area(pair <ll, ll> O, pair <ll, ll>  P, pair <ll, ll> Q){
+	return ((P.first - O.first) * (Q.second - O.second) -
+		   (P.second - O.second) * (Q.first - O.first) <= 0);
+}
+void monotone_chain(){
+	sort(all(points));
+	ll N = points.size();
+	if (N < 3){
+		hull = points;
+		return;
+	}
+	for (int i = 0; i < N; i++){
+		while (hull.size() > 1 && area(hull[hull.size() - 2], hull.back(), points[i])) hull.pop_back();
+		hull.push_back(points[i]);
+	}
+	auto lower_hull_length = hull.size();
+	for (int i = N - 2; i >= 0; i--){
+		while (hull.size() > lower_hull_length && area(hull[hull.size() - 2], hull.back(), points[i]))
+			hull.pop_back();
+		hull.push_back(points[i]);
+	}
+	hull.pop_back();
+}
+void startPoint(){
+    start = 0;
+    pair <ll, ll> cur = mp(hull[0].fi, hull[0].se);
+    for (int i = 1; i < hull.size(); i++){
+        if (hull[i].se < cur.se || (hull[i].se == cur.se && hull[i].fi < cur.fi)){
+            cur.fi = hull[i].fi;
+            cur.se = hull[i].se;
+            start = i;
+        }
+    }
+}
+bool direct(){
+    int S = 0;
+    for (int i = 1; i < hull.size() - 1; i++)
+        S += hull[i].fi * hull[i - 1].se - hull[i].se * hull[i - 1].fi;
+    return (S < 0);
+}
+ll n;
+map <pair<ll, ll>, ll> cnt;;
+main(){
+    faster
+    setIO("Codeforces");
+	cin >> n;
+    hull = {};
+    for (int i = 0; i < n; i++){
+        ll u, v;
+        cin >> u >> v;
+        if (cnt[mp(u, v)] >= 1) continue;
+        cnt[{u, v}]++;
+        points.pb({u , v});
+    }
+    monotone_chain();
+    cout << hull.size() << el;
+    startPoint();
+    ll area = 0;
+    for (int i = 1; i < hull.size(); i++){
+        area += (hull[i].fi * hull[i - 1].se) - (hull[i].se * hull[i - 1].fi);
+    }
+    area += hull[0].fi * hull[hull.size() - 1].se - hull[0].se * hull[hull.size() - 1].fi;
+    bool clockwise = 0;
+    if (area < 0) clockwise = 1;
+    area = abs(area);
+    if (area & 1) cout << area / 2 << "." << "5" << el;
+    else cout << area / 2 << "." << "0" << el;
+    if (clockwise){
+        for (int i = start; i < hull.size(); i++) cout << hull[i].fi << " " << hull[i].se << el;
+        for (int i = 0; i < start; i++) cout << hull[i].fi << " " << hull[i].se << el;
+    }else{
+        for (int i = start; i >= 0; i--) cout << hull[i].fi << " " << hull[i].se << el;
+        for (int i = hull.size(); i > start; i--) cout << hull[i].fi << " " << hull[i].se << el;
+    }
+	return 0;
+}
