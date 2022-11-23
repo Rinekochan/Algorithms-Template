@@ -3,8 +3,7 @@ ll manacher(string s){
     vector <ll> F(sz, 0);
     string a = string(sz, '=');
     for (int i = 0; i < sz; i += 2) a[i] = s[i / 2];
-    cout << a << el;
-    ll L = 0, R = -1, c, ans = 0;
+    ll L = 0, R = -1, c;
     for (int i = 0, j = 0; i < sz; i++){
         j = (i > R ? 0 : min(F[L + R - i], R - i)) + 1;
         while (i - j >= 0 && i + j < sz && a[i - j] == a[i + j]) j++;
@@ -13,12 +12,11 @@ ll manacher(string s){
             R = i + j;
             L = i - j;
         }
-        cout << F[i] << el;
         ll temp = (F[i] + i % 2) / 2 * 2 + 1 - i % 2;
         if (temp > ans){
             ans = temp;
             c = i;
         }
     }
-    return ans;
+    return c / 2;
 }
